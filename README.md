@@ -2,6 +2,9 @@
 
 > Commercial use: this repository is published for portfolio/demo evaluation. Commercial use or resale requires written permission. See `COMMERCIAL_USE.md`.
 
+## Screenshot
+
+![Virtual Employee Platform workspace](assets/screenshots/workspace.png)
 
 一个人 + AI = 一家完整公司。智播营销咨询(9人) | 天猫全域电商(6人) | Amazon跨境(4人) | Shopify独立站(2人) | TikTok内容电商(4人) | B2B外贸(4人) | AI外贸获客小队(5人)
 
