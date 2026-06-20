@@ -1,0 +1,16 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pycache_tmp/
+.logs/
+logs/
+*.log
+.env
+.env.*
+!.env.example
+agents.db
+agent_outputs/
+*.sqlite
+*.sqlite3
+*.db
+

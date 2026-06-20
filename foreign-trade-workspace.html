@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI外贸客户开发SOP智能体</title>
+  <style>
+    :root{
+      --bg:#f7f7f4;--panel:#fff;--ink:#191919;--muted:#686b70;--line:#deded8;
+      --accent:#0f766e;--accent2:#164e63;--danger:#b42318;--warn:#b45309;--ok:#15803d;
+      --radius:8px;--shadow:0 10px 30px rgba(20,20,20,.08)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;letter-spacing:0}
+    button,input,textarea,select{font:inherit}
+    .app{display:grid;grid-template-columns:260px minmax(0,1fr) 360px;min-height:100vh}
+    .rail{border-right:1px solid var(--line);padding:18px;background:#fbfbf8}
+    .brand{font-weight:800;font-size:18px;margin-bottom:4px}
+    .sub{color:var(--muted);font-size:12px;line-height:1.5}
+    .demo{margin-top:18px;display:flex;gap:8px;flex-direction:column}
+    .btn{height:36px;border:1px solid var(--line);background:#fff;border-radius:var(--radius);padding:0 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;color:var(--ink)}
+    .btn:hover{border-color:#b9b9b0}
+    .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn.dark{background:#202426;border-color:#202426;color:#fff}
+    .step-list{margin-top:22px;display:flex;flex-direction:column;gap:8px}
+    .step{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;padding:8px;border-radius:var(--radius);border:1px solid transparent}
+    .step.active{background:#eef8f5;border-color:#c6e8df}
+    .num{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#ecece7;color:#555;font-size:12px;font-weight:700}
+    .step.done .num{background:#dff4e6;color:var(--ok)}
+    .step-title{font-weight:650;font-size:13px}
+    .step-desc{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.35}
+    .main{padding:22px;min-width:0}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
+    h1{margin:0;font-size:24px;line-height:1.2}
+    .caption{margin-top:6px;color:var(--muted);line-height:1.5}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    label{font-weight:650;font-size:12px;color:#353535}
+    input,textarea,select{width:100%;border:1px solid var(--line);background:#fff;border-radius:var(--radius);padding:10px 11px;outline:none}
+    textarea{min-height:78px;resize:vertical}
+    input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,118,110,.12)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:14px 16px}
+    .panel-title{font-weight:760}
+    .panel-body{padding:16px}
+    .command{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+    .notice{margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5}
+    .missing{color:var(--danger);font-size:12px;margin-top:8px;display:none}
+    .results{margin-top:16px;display:grid;gap:14px}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+    th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:12px;line-height:1.45}
+    th{background:#f2f2ee;font-weight:750;color:#383838}
+    tr:last-child td{border-bottom:none}
+    .tag{display:inline-flex;min-width:26px;height:22px;padding:0 8px;border-radius:999px;align-items:center;justify-content:center;font-size:12px;font-weight:750}
+    .tag.A{background:#dcfce7;color:#166534}.tag.B{background:#fef3c7;color:#92400e}.tag.C{background:#fee2e2;color:#991b1b}
+    .risk{color:var(--danger);font-weight:650}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .tab{height:30px;border:1px solid var(--line);border-radius:999px;padding:0 10px;background:#fff;cursor:pointer;color:#4a4a4a;font-size:12px}
+    .tab.active{background:#202426;color:#fff;border-color:#202426}
+    .output{white-space:pre-wrap;background:#fbfbf8;border:1px solid var(--line);border-radius:var(--radius);padding:12px;line-height:1.55;max-height:440px;overflow:auto}
+    .side{border-left:1px solid var(--line);padding:18px;background:#fbfbf8;min-width:0}
+    .metric{display:grid;grid-template-columns:1fr auto;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}
+    .metric:last-child{border-bottom:none}
+    .metric b{font-size:20px}
+    .status{padding:10px;border:1px solid #dbe7e3;background:#effaf6;border-radius:var(--radius);color:#166534;line-height:1.45;font-size:12px}
+    .source{font-size:12px;color:var(--muted);line-height:1.45;word-break:break-all}
+    .loader{display:none;margin-left:4px;color:var(--muted)}
+    @media(max-width:1180px){.app{grid-template-columns:220px minmax(0,1fr)}.side{grid-column:1/-1;border-left:none;border-top:1px solid var(--line)}}
+    @media(max-width:760px){.app{display:block}.rail,.side{border:none;border-bottom:1px solid var(--line)}.grid{grid-template-columns:1fr}.topbar{display:block}.command .btn{width:100%}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">外贸 SDR 虚拟员工</div>
+    <div class="sub">输入产品和市场，按9步SOP生成线索、背调、分级、开发信和30天跟进表。</div>
+    <div class="demo">
+      <button class="btn" id="demoBtn">载入 eBike 美国案例</button>
+      <button class="btn dark" id="openMainBtn">返回通用员工平台</button>
+    </div>
+    <div class="step-list" id="stepList"></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1>AI外贸客户开发SOP智能体</h1>
+        <div class="caption">面向B2B批发拓客。系统只生成资料和草稿，不自动发送邮件、不自动私信。</div>
+      </div>
+      <button class="btn primary" id="runBtn">运行完整SOP</button>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">基础信息录入</div>
+        <span class="loader" id="loader">正在执行9步流程...</span>
+      </div>
+      <div class="panel-body">
+        <div class="grid">
+          <div class="field"><label>产品品类</label><input id="product_category" placeholder="eBike / electric bicycle"></div>
+          <div class="field"><label>目标国家</label><input id="target_country" placeholder="United States"></div>
+          <div class="field"><label>目标客户类型</label><input id="buyer_types" placeholder="importer, distributor, dealer, brand"></div>
+          <div class="field"><label>主打产品参数</label><input id="product_params" placeholder="750W motor, 48V battery, 60-80km range"></div>
+          <div class="field"><label>认证资质</label><input id="certifications" placeholder="CE, FCC, UL battery report pending"></div>
+          <div class="field"><label>起订量</label><input id="moq" placeholder="20 units mixed models"></div>
+          <div class="field"><label>价格区间</label><input id="price_range" placeholder="FOB USD 480-760"></div>
+          <div class="field"><label>线索数量</label><select id="lead_count"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div>
+          <div class="field" style="grid-column:1/-1"><label>产品核心优势</label><textarea id="advantages" placeholder="稳定电池供应、可做私标、备件支持、快速样品、适合通勤和经销商补货"></textarea></div>
+        </div>
+        <div class="missing" id="missing"></div>
+        <div class="command">
+          <button class="btn primary" id="runBtn2">生成客户开发数据包</button>
+          <a class="btn" id="exportBtn" style="display:none;text-decoration:none" href="#">下载Excel数据包</a>
+        </div>
+        <div class="notice">线索来自公开搜索或待验证占位，邮箱和联系人不会编造；无法确认的信息统一标注为“待验证”。</div>
+      </div>
+    </section>
+
+    <section class="results" id="results" style="display:none">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">客户线索清单</div><div id="leadSummary" class="source"></div></div>
+        <div class="panel-body"><div style="overflow:auto"><table id="leadTable"></table></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">输出报告</div></div>
+        <div class="panel-body">
+          <div class="tabs" id="tabs"></div>
+          <div class="output" id="output"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="side">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">执行状态</div></div>
+      <div class="panel-body">
+        <div class="status" id="statusBox">等待输入产品和市场信息。</div>
+        <div class="metric"><span>A类高意向</span><b id="aCount">0</b></div>
+        <div class="metric"><span>B类中意向</span><b id="bCount">0</b></div>
+        <div class="metric"><span>C类低意向</span><b id="cCount">0</b></div>
+        <div class="metric"><span>待验证字段</span><b id="pendingCount">0</b></div>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">合规边界</div></div>
+      <div class="panel-body source">
+        仅服务B2B批发开发；不自动发送邮件；不生成虚假联系人；欧美市场自动提示FCC、CE、UL、进口关税、产品安全等风险。
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const steps=['基础信息校验','目标市场调研','拓客关键词生成','潜客抓取与清洗','客户背调','A/B/C分级','个性化开发信','30天跟进SOP','Excel数据包汇总'];
+const qs=new URLSearchParams(location.search);
+const API=(qs.get('agent_port')?'http://127.0.0.1:'+qs.get('agent_port'):(localStorage.getItem('cowork_agent_server')||'http://127.0.0.1:9100')).replace(/\/$/,'');
+let lastResult=null;
+
+function renderSteps(active=-1,done=-1){
+  stepList.innerHTML=steps.map((s,i)=>`<div class="step ${i<=done?'done':''} ${i===active?'active':''}"><div class="num">${i<done?'✓':i+1}</div><div><div class="step-title">${s}</div><div class="step-desc">${i<=done?'已完成':i===active?'执行中':'等待'}</div></div></div>`).join('');
+}
+renderSteps();
+
+function payload(){
+  return {
+    product_category:product_category.value.trim(),
+    product_params:product_params.value.trim(),
+    target_country:target_country.value.trim(),
+    buyer_types:buyer_types.value.trim(),
+    advantages:advantages.value.trim(),
+    certifications:certifications.value.trim(),
+    moq:moq.value.trim(),
+    price_range:price_range.value.trim(),
+    lead_count:Number(lead_count.value)
+  }
+}
+
+function fillDemo(){
+  product_category.value='eBike / electric bicycle';
+  product_params.value='500W-750W motor, 48V removable battery, 60-80km range, hydraulic disc brake, commuter and folding models';
+  target_country.value='United States';
+  buyer_types.value='importer, distributor, dealer, brand, multi-store retailer';
+  advantages.value='stable battery supply, private-label support, spare parts package, fast sample preparation, dealer-ready marketing materials';
+  certifications.value='CE, FCC, MSDS, UN38.3, UL battery report pending';
+  moq.value='20 units mixed models';
+  price_range.value='FOB USD 480-760';
+  lead_count.value='20';
+}
+
+function setBusy(busy){
+  runBtn.disabled=runBtn2.disabled=busy;
+  loader.style.display=busy?'inline':'none';
+}
+
+async function runSop(){
+  missing.style.display='none';
+  setBusy(true); renderSteps(0,-1); statusBox.textContent='正在校验基础信息...';
+  try{
+    const body=payload();
+    for(let i=0;i<steps.length;i++){renderSteps(i,i-1); await new Promise(r=>setTimeout(r,80))}
+    const r=await fetch(API+'/foreign-trade/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await r.json();
+    if(!r.ok){
+      if(data.missing){missing.innerHTML='请补全：'+data.missing.map(x=>x.label).join('、');missing.style.display='block'}
+      throw new Error(data.error||'信息不完整');
+    }
+    lastResult=data; renderSteps(-1,8); renderResult(data);
+    statusBox.textContent='已生成完整客户开发SOP数据包。发送动作需人工确认。';
+  }catch(e){
+    statusBox.textContent='执行失败：'+e.message;
+  }finally{setBusy(false)}
+}
+
+function renderResult(data){
+  results.style.display='grid';
+  exportBtn.style.display='inline-flex';
+  exportBtn.href=API+data.export_url;
+  leadSummary.textContent=`${data.leads.length} 条线索 · ${data.run_id}`;
+  const counts={A:0,B:0,C:0,pending:0};
+  for(const l of data.leads){counts[l.grade]=(counts[l.grade]||0)+1;if(JSON.stringify(l).includes('待验证'))counts.pending++}
+  aCount.textContent=counts.A||0;bCount.textContent=counts.B||0;cCount.textContent=counts.C||0;pendingCount.textContent=counts.pending||0;
+  leadTable.innerHTML='<tr><th>等级</th><th>客户公司名</th><th>官网</th><th>邮箱</th><th>客户类型</th><th>核心匹配点</th><th>风险项</th><th>来源</th></tr>'+
+    data.leads.map(l=>`<tr><td><span class="tag ${l.grade}">${l.grade}</span></td><td>${esc(l.company)}</td><td>${link(l.website)}</td><td>${esc(l.email)}</td><td>${esc(l.customer_type)}</td><td>${esc(l.core_match)}</td><td class="risk">${esc(l.risk_flags||'')}</td><td>${link(l.source_link)}</td></tr>`).join('');
+  const panes={
+    '市场分析':formatMarket(data.market_report),
+    '关键词库':formatKeywords(data.keywords),
+    '开发信合集':data.outreach_emails.slice(0,12).map(x=>`${x.company} · ${x.type}\nSubject: ${x.subject}\n${x.body}`).join('\n\n---\n\n'),
+    '30天跟进SOP':data.followups.slice(0,28).map(x=>`${x.company} D+${x.interval_days} ${x.purpose}\n${x.copy}`).join('\n\n'),
+    '完整报告':data.text_report
+  };
+  tabs.innerHTML=Object.keys(panes).map((k,i)=>`<button class="tab ${i===0?'active':''}" data-k="${k}">${k}</button>`).join('');
+  output.textContent=panes[Object.keys(panes)[0]];
+  tabs.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{tabs.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');output.textContent=panes[btn.dataset.k]});
+}
+
+function formatMarket(m){return [m.title,'',...m.demand_analysis,'',...m.buyer_concerns,'',...m.compliance.map(x=>'合规提醒：'+x),...m.risk_items.map(x=>'风险：'+x.item+' - '+x.advice)].join('\n')}
+function formatKeywords(k){return Object.entries(k).map(([g,items])=>'【'+g+'】\n'+items.map(x=>'- '+x).join('\n')).join('\n\n')}
+function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function link(s){if(!s||s==='待验证')return esc(s||'');return `<a href="${esc(s)}" target="_blank">${esc(s)}</a>`}
+
+demoBtn.onclick=fillDemo;
+runBtn.onclick=runSop;
+runBtn2.onclick=runSop;
+openMainBtn.onclick=()=>{location.href='agency-workspace.html'+(qs.get('agent_port')?'?agent_port='+qs.get('agent_port'):'')};
+fillDemo();
+</script>
+</body>
+</html>
