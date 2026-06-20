@@ -156,3 +156,9 @@ AI外贸获客小队也接入了工具能力：
 
 注册地址：platform.deepseek.com
 密钥仅保存在浏览器 localStorage，不经过任何服务器。
+
+## Private Deployment / Customization
+
+For private deployment, custom AI employee teams, foreign-trade workflow customization, or business automation consulting, scan WeChat to contact me.
+
+<img src="assets/wechat-qr.png" alt="WeChat QR code" width="220" />
